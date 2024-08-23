@@ -54,3 +54,4 @@ dkms.conf
 # Explicit executable
 q
 valgrind.cmd
+.vscode/
