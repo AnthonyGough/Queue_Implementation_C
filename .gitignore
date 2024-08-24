@@ -52,6 +52,6 @@ Mkfile.old
 dkms.conf
 
 # Explicit executable
-q
+b_bufq
 valgrind.cmd
-.vscode/
+.vscode/*
