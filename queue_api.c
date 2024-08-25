@@ -38,7 +38,7 @@
  * Queues. (n.d.). Data Structures Handbook. https://www.thedshandbook.com/queues/
  */
 
-‌
+
 
 
 void destroy_queue(queue_t *queue) {
@@ -96,5 +96,5 @@ bool isFull(queue_t *queue) {
 }
 
 bool isEmpty(queue_t *queue) {
-    
+
 }

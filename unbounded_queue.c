@@ -12,32 +12,37 @@
 
 #define DEFAULT_INITIAL_QUEUE_SIZE 5
 
+#define MAX_QUEUE_SIZE 15
+
 
 
 
 
 int main(int argc, char *argv[]) {
 
-  if (argc!=2) {
-    fprintf (stderr, "Usage: %s initial_queue_length\n", argv[0]);
+  if (argc!=3) {
+    fprintf (stderr, "Usage: %s  initial_queue_length max_queue_length\n", argv[0]);
     return EXIT_FAILURE;
   }
 
-  if (!isNumber(argv[1]))  {
-    fprintf(stderr, "usage: %s initial_queue length\nintial_queue_length: a numeric char between 0 and 9\n\n", argv[0]);
-    exit(EXIT_FAILURE);
+  if ((!isNumber(argv[1])) ||  (!isNumber(argv[2]))) {
+    fprintf(stderr, "Usage: %s initial_queue length max_\nintial_queue_length: a numeric char between 0 and 9\
+      nmax_queue_length: a numerical char between 1 and %d\n\n", argv[0], MAX_QUEUE_SIZE);
+      return EXIT_FAILURE;
   }
  
-  if (atoi(argv[1])>MAX_CHILD) {
-    fprintf(stderr, "usage: %s no_of_children\nno_of_children must be less than %d\n", argv[0], MAX_CHILD);
-    exit(EXIT_FAILURE);
+  if (atoi(argv[2])>MAX_QUEUE_SIZE) {
+    fprintf(stderr, "Usage: %s initial_queue_length max_queue_length\n intial_queue_length: a numeric char between 0 and 9\
+      nmax_queue_length: a numerical char between 1 and %d\n\n", argv[0], MAX_QUEUE_SIZE, argv[0], MAX_QUEUE_SIZE);
+      return EXIT_FAILURE;
   }
 
+  srand(time(NULL));
+  int queue_length = atoi(argv[1]);
+  int max_queue_length = atoi(argv[2]);                    
 
   queue_t *queue_construct = malloc(sizeof(queue_t));
-  setup_queue_data_structure(queue_construct);
-
-  srand(time(NULL));
+  setup_queue_data_structure(queue_construct);  
   node_data_t *data;
   
   int64_t now = time_milli_stamp();
