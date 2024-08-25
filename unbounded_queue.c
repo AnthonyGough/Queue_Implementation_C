@@ -10,70 +10,45 @@
 #define MINSLEEP 5000000L
 #define MAXSLEEP 10000000L
 
-node_t *dequeue(queue_t *queue) {
-  node_t *front;
-  if (queue->length>0) {
-    queue->length--;
-    front=queue->front_pos;
-    if (queue->length>1) {
-        queue->front_pos = queue->front_pos->next;
-      } else {
-        queue->front_pos=NULL;
-        queue->end_pos=NULL;
-      } 
-  }
-  return front;
-}
+#define DEFAULT_INITIAL_QUEUE_SIZE 5
 
 
-void enqueue(queue_t *queue, node_data_t *node_data)
-{
-  queue->length++;
-  node_t *new_node = malloc(sizeof(node_t));
-  new_node->value = node_data->value;
-  new_node->arrival = node_data->arrival;
-  strcpy(new_node->node_desc, node_data->node_desc);
-  new_node->next = NULL;
- 
-  /* First into queue*/
-  if (queue->length==1) {
-    queue->front_pos = new_node;
-    queue->end_pos = new_node;
-  } else {
-    queue->end_pos->next = new_node;
-    queue->end_pos = new_node;
-  }
-}
+
 
 
 int main(int argc, char *argv[]) {
 
+  if (argc!=2) {
+    fprintf (stderr, "Usage: %s initial_queue_length\n", argv[0]);
+    return EXIT_FAILURE;
+  }
+
+  if (!isNumber(argv[1]))  {
+    fprintf(stderr, "usage: %s initial_queue length\nintial_queue_length: a numeric char between 0 and 9\n\n", argv[0]);
+    exit(EXIT_FAILURE);
+  }
+ 
+  if (atoi(argv[1])>MAX_CHILD) {
+    fprintf(stderr, "usage: %s no_of_children\nno_of_children must be less than %d\n", argv[0], MAX_CHILD);
+    exit(EXIT_FAILURE);
+  }
+
+
   queue_t *queue_construct = malloc(sizeof(queue_t));
-  queue_construct->end_pos=NULL;
-  queue_construct->front_pos=NULL;
-  queue_construct->length = 0;
-  
-  
+  setup_queue_data_structure(queue_construct);
+
   srand(time(NULL));
   node_data_t *data;
   
-  int64_t now = time_milli_tstamp();
+  int64_t now = time_milli_stamp();
   
-  for (int i=0; i < 5; i++) {
+  for (int i=0; i < DEFAULT_INITIAL_QUEUE_SIZE; i++) {
     data = malloc(sizeof(node_data_t));
-    int rd_nm = rand() % (20-1+1) + 1;
-    data->value = rd_nm;
-    char str_num[4]= { 0 };
-    char person_str[20] = "Person";
-    sprintf(str_num, " %d", i);
-    strcat(person_str, str_num);
-    strcpy(data->node_desc, person_str);
-    struct timespec ts;
-    ts.tv_sec=0;
-    ts.tv_nsec = ((rand() * rand()) % ((MAXSLEEP-MINSLEEP + 1) + MINSLEEP));
-    nanosleep(&ts, NULL);     
+    intialise_node(data, i);
+   
+    nano_sleep_process();  
     
-    data->arrival =  time_milli_tstamp() - now;
+    data->arrival =  time_milli_stamp() - now;
     enqueue(queue_construct, data);
     free(data);
   }
@@ -86,7 +61,31 @@ int main(int argc, char *argv[]) {
   free(queue_construct);
 }
 
-int64_t time_milli_tstamp() {
+void nano_sleep_process() {
+  struct timespec ts;
+  ts.tv_sec=0;
+  ts.tv_nsec = ((rand() * rand()) % ((MAXSLEEP-MINSLEEP + 1) + MINSLEEP));
+  nanosleep(&ts, NULL);   
+}
+
+void intialise_node(node_t *data, int id) {
+  int rd_nm = rand() % (20-1+1) + 1;
+  data->value = rd_nm;
+  char str_num[4]= { 0 };
+  char person_str[20] = "Person";
+  sprintf(str_num, " %d", id);
+  strcat(person_str, str_num);
+  strcpy(data->node_desc, person_str);
+}
+
+void setup_queue_data_structure(queue_t *queue_construct)
+{
+  queue_construct->end_pos = NULL;
+  queue_construct->front_pos = NULL;
+  queue_construct->length = 0;
+}
+
+int64_t time_milli_stamp() {
   struct timespec now;
   timespec_get(&now, TIME_UTC);
   return ((int64_t)now.tv_sec) * 1000 + ((int64_t)now.tv_nsec)/1000000;
@@ -96,16 +95,7 @@ void print_node(node_t *node) {
   printf("\nNode dequed is %s with ticket number %d\n", node->node_desc, node->value);
 }
 
-void destroy_queue(queue_t *queue) {
-    node_t *node = queue->front_pos;
-    node_t *tmp;
 
-    while (node) {
-      tmp=node;
-      node=node->next;
-      free(tmp);      
-    }
-}
 
 void print_queue(queue_t *queue) {
   node_t *node = queue->front_pos;

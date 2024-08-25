@@ -1,7 +1,9 @@
+#pragma once
+
 #include <stddef.h>
 #include <time.h>
 #include <inttypes.h>
-#pragma once
+
 
 typedef struct node_data {
   int value;
@@ -30,4 +32,6 @@ node_t *dequeue(queue_t *queue);
 void print_queue(queue_t *queue);
 void print_node(node_t *node);
 void destroy_queue(queue_t *queue);
-int64_t time_milli_tstamp();
+int64_t time_milli_stamp();
+int isNumber(char values[]);
+void setup_queue_data_structure(queue_t *queue_construct);
