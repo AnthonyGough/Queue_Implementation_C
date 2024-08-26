@@ -95,6 +95,7 @@ int64_t time_milli_stamp() {
 
 void print_node(node_t *node) {
   printf("\nNode dequed is %s with ticket number %d\n", node->node_desc, node->value);
+  
 }
 
 
@@ -103,8 +104,8 @@ void print_queue(queue_t *queue) {
   node_t *node = queue->front_pos;
   int pos = 0;
   printf("\nThe length of the queue is %d\n", queue->curr_length);
-  while (node) {
+  do {
     printf("\nNode at position %d contains %s with ticket number %d - arrived at time %lu\n",pos++, node->node_desc, node->value, node->arrival);
     node = node->next;
-  }
+  } while (node!=queue->front_pos);
 }

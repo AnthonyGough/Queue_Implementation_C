@@ -100,6 +100,7 @@ node_t *dequeue(queue_t *queue) {
     queue->end_pos=NULL;
   } else {
     queue->front_pos = queue->front_pos->next;
+    queue->end_pos->next = queue->front_pos;
   }     
   queue->curr_length--;
   return dq_node;
