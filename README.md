@@ -18,17 +18,18 @@
 ***
 
 ## **Requirements**
-1. **proto_header.h** (Function prototypes and ancillary data structures for queue implementastion)
-2. **bounded_queue.c** (Implementation of the Queue ADT API/Operations)
-3. **q_drive.c** (Driver file to test the queue operations correct
-4. **makefile** (Provided to compile source code to **C** executable);
+1. **proto_header.h** - Function prototypes and data structures for queue implementation
+2. **bounded_queue.c** - Implementation of the Queue ADT API/Operations
+3. **helper_fnc.c** - Additional helper functions for queue implementation
+4. **q_drive.c** - Test Driver - file to test the queue operations are correct
+5. **makefile** - Provided to compile source code to **C** executable
 
 ```
 Compile source files using gcc
-    gcc -o b_queue bounded_queue.c q_drive.c -I. -Wall
+    gcc -o b_queue bounded_queue.c helper_function.c qq_drive.c -I. -Wall
 ```
 
 
 ## Test Driver
 
-Test driver will use a set of operations/function calls to verify that the implementation of the Queue is correct. Due to the nature of the underlying data structure (Linked-List) that is the core of the Queue, the FIFO nature of Queue operations and the additional functionality implemented in this Queue there are a number of cases that require verification to ensure the Queue implementation is correct.
+Test driver will use a set of operations/function calls to verify that the implementation of the Queue is correct. The expected output from the test driver is provided in this README file and is also available for download as a text file.
