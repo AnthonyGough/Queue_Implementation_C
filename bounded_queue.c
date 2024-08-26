@@ -15,9 +15,6 @@
 #define MAX_QUEUE_SIZE 15
 
 
-
-
-
 int main(int argc, char *argv[]) {
 
   if (argc!=3) {
@@ -26,36 +23,35 @@ int main(int argc, char *argv[]) {
   }
 
   if ((!isNumber(argv[1])) ||  (!isNumber(argv[2]))) {
-    fprintf(stderr, "Usage: %s initial_queue length max_\nintial_queue_length: a numeric char between 0 and 9\
-      nmax_queue_length: a numerical char between 1 and %d\n\n", argv[0], MAX_QUEUE_SIZE);
+    fprintf(stderr, "Usage: %s initial_queue_length max_queue_length\nintial_queue_length: a numeric char between 0 and 9\
+      \nmax_queue_length: a numerical char between 1 and %d\n\n", argv[0], MAX_QUEUE_SIZE);
       return EXIT_FAILURE;
   }
  
   if (atoi(argv[2])>MAX_QUEUE_SIZE) {
-    fprintf(stderr, "Usage: %s initial_queue_length max_queue_length\n intial_queue_length: a numeric char between 0 and 9\
-      nmax_queue_length: a numerical char between 1 and %d\n\n", argv[0], MAX_QUEUE_SIZE, argv[0], MAX_QUEUE_SIZE);
+    fprintf(stderr, "Usage: %s initial_queue_length max_queue_length\nintial_queue_length: a numeric char between 0 and 9\
+      \nmax_queue_length: a numerical char between 1 and %d\n\n", argv[0], MAX_QUEUE_SIZE);
       return EXIT_FAILURE;
   }
 
   srand(time(NULL));
-  int queue_length = atoi(argv[1]);
+  int init_queue_length = atoi(argv[1]);
   int max_queue_length = atoi(argv[2]);                    
 
   queue_t *queue_construct = malloc(sizeof(queue_t));
-  setup_queue_data_structure(queue_construct);  
-  node_data_t *data;
-  
+  setup_queue_data_structure(queue_construct, max_queue_length);  
+  node_t *data;
   int64_t now = time_milli_stamp();
   
-  for (int i=0; i < DEFAULT_INITIAL_QUEUE_SIZE; i++) {
-    data = malloc(sizeof(node_data_t));
+  for (int i=0; i < init_queue_length; i++) {
+    data = malloc(sizeof(node_t));
     intialise_node(data, i);
    
     nano_sleep_process();  
     
     data->arrival =  time_milli_stamp() - now;
     enqueue(queue_construct, data);
-    free(data);
+    
   }
 
   print_queue(queue_construct);
@@ -83,11 +79,12 @@ void intialise_node(node_t *data, int id) {
   strcpy(data->node_desc, person_str);
 }
 
-void setup_queue_data_structure(queue_t *queue_construct)
+void setup_queue_data_structure(queue_t *queue_construct, int max_capacity)
 {
   queue_construct->end_pos = NULL;
   queue_construct->front_pos = NULL;
-  queue_construct->length = 0;
+  queue_construct->curr_length = 0;
+  queue_construct->capacity = max_capacity;
 }
 
 int64_t time_milli_stamp() {
@@ -105,7 +102,7 @@ void print_node(node_t *node) {
 void print_queue(queue_t *queue) {
   node_t *node = queue->front_pos;
   int pos = 0;
-  printf("\nThe length of the queue is %ld\n", queue->length);
+  printf("\nThe length of the queue is %d\n", queue->curr_length);
   while (node) {
     printf("\nNode at position %d contains %s with ticket number %d - arrived at time %lu\n",pos++, node->node_desc, node->value, node->arrival);
     node = node->next;

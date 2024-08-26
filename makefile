@@ -1,7 +1,7 @@
 CC=gcc
 CPPFLAGS= -I. -Wall
 DEPS = proto_header.h
-OBJS := unbounded_queue.c
+OBJS := bounded_queue.o queue_api.o helper_fncs.o
 
 %.o: %.c $(DEPS)
 	$(CC) -c -o $@ $< $(CPPFLAGS)

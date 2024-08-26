@@ -48,9 +48,10 @@
  *               may contain.  
  * \returns a pointer the the bounded queue/circular queue.
  */
-queue_t *queue_init(int queue_length) {
+queue_t *queue_init(int max_queue_length) {
   queue_t *bounded_queue = malloc(sizeof(queue_t));
-  bounded_queue->length = queue_length;
+  bounded_queue->curr_length = 0;
+  bounded_queue->capacity = max_queue_length;
   return bounded_queue;
 }
 
@@ -82,46 +83,51 @@ void destroy_queue(queue_t *queue) {
  * part of the queue. The head pointer will point to the next node in the queue which can be defined as
  * the node pointed to by dequeued_node->next. The node defined as dequeued_node->next is now the first 
  * element/node in the queue. The number of elements/nodes stored in the queue is decremented by 1.
- * \param queue - A pointer to the queue that was dynamically allocated when the queue was created. 
- *
+ * \param queue - A pointer to the queue ADT returned from invoking queue_init() to create the queue_t ADT
+ * \returns the node at the front of the queue if there is at least one node/element in the queue. If the
+ *          queue is empty then API will exit with a status of -1. The function should not be invoked on an
+ *          empty queue.
  */
 node_t *dequeue(queue_t *queue) {
-  if (queue->length==0) {
-    fprintf(stderr, "\nUnable to dequeue - the queue is empty\n");
+  if (queue->curr_length==0) {
+    fprintf(stderr, "\nUnable to dequeue from an empty queue. The queue must contain at least one element to perform a dequeue\n");
     exit(EXIT_FAILURE);
   }
   node_t *dq_node = queue->front_pos;
-  queue->length--;
-  if (queue->length==1) {
+  
+  if (queue->curr_length==1) {
     queue->front_pos=NULL;
     queue->end_pos=NULL;
   } else {
     queue->front_pos = queue->front_pos->next;
   }     
+  queue->curr_length--;
   return dq_node;
 }
 
-
-void enqueue(queue_t *queue, node_data_t *node_data)
-{
-  queue->length++;
-  node_t *new_node = malloc(sizeof(node_t));
-  new_node->value = node_data->value;
-  new_node->arrival = node_data->arrival;
-  strcpy(new_node->node_desc, node_data->node_desc);
-  new_node->next = NULL;
- 
-  /* First into queue*/
-  if (queue->length==1) {
-    queue->front_pos = new_node;
-    queue->end_pos = new_node;
-  } else {
-    queue->end_pos->next = new_node;
-    queue->end_pos = new_node;
-  }
+bool check_buffer_capacity(queue_t *queue) {
+  return true;
 }
 
-node_data_t *peek(queue_t *queue) {
+void enqueue(queue_t *queue, node_t *new_node)
+{
+  queue->curr_length++;  
+  new_node->next = queue->front_pos;
+
+ 
+  /* First into queue*/
+  if (queue->curr_length==1) {
+    queue->front_pos = new_node;
+    queue->end_pos = new_node;
+  } else {   
+    queue->end_pos->next = new_node; 
+    queue->end_pos = new_node;
+    
+  }
+  new_node->next = queue->front_pos;
+}
+
+/* node_data_t *peek(queue_t *queue) {
 
 }
 
@@ -131,4 +137,4 @@ bool isFull(queue_t *queue) {
 
 bool isEmpty(queue_t *queue) {
 
-}
+} */

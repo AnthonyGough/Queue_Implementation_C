@@ -6,12 +6,6 @@
 
 
 
-typedef struct node_data {
-  int value;
-  char node_desc[20];
-  int64_t arrival;
-} node_data_t;
-
 typedef struct node {
   int value;
   char node_desc[20]; 
@@ -23,16 +17,20 @@ typedef struct node {
 typedef struct queue {
   node_t *front_pos;
   node_t *end_pos;
-  size_t length;
+  int curr_length;
+  int capacity;
 } queue_t;
 
 
 
-void enqueue(queue_t *queue, node_data_t *node_data);
+void enqueue(queue_t *queue, node_t *new_node);
 node_t *dequeue(queue_t *queue);
 void print_queue(queue_t *queue);
 void print_node(node_t *node);
 void destroy_queue(queue_t *queue);
 int64_t time_milli_stamp();
 int isNumber(char values[]);
-void setup_queue_data_structure(queue_t *queue_construct);
+void setup_queue_data_structure(queue_t *queue_construct, int max_capacity);
+queue_t *queue_init(int max_queue_length);
+void intialise_node(node_t *data, int id);
+void nano_sleep_process();
