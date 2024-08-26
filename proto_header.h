@@ -30,7 +30,7 @@ void print_node(node_t *node);
 void destroy_queue(queue_t *queue);
 int64_t time_milli_stamp();
 int isNumber(char values[]);
-void setup_queue_data_structure(queue_t *queue_construct, int max_capacity);
+
 queue_t *queue_init(int max_queue_length);
 void intialise_node(node_t *data, int id);
 void nano_sleep_process();

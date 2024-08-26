@@ -44,6 +44,7 @@
  * Precondition: queue_init() has not previously been invoked in the application instance
  * Postcondition: Memory for a queue_t ADT has been allocated and the length attribute
  *                for the queue has been initialised. The number of elements in the queue is 0.
+ *                Pointers for the front/end of queue are set to NULL.
  * \param queue_length is the maximum number of elements that the bounded queue/circular queue
  *               may contain.  
  * \returns a pointer the the bounded queue/circular queue.
@@ -52,8 +53,11 @@ queue_t *queue_init(int max_queue_length) {
   queue_t *bounded_queue = malloc(sizeof(queue_t));
   bounded_queue->curr_length = 0;
   bounded_queue->capacity = max_queue_length;
+  bounded_queue->end_pos = NULL;
+  bounded_queue->front_pos = NULL;
   return bounded_queue;
 }
+
 
 
 /**
@@ -106,7 +110,7 @@ node_t *dequeue(queue_t *queue) {
   return dq_node;
 }
 
-bool check_buffer_capacity(queue_t *queue) {
+bool check_queue_capacity(queue_t *queue) {
   return true;
 }
 
@@ -127,6 +131,8 @@ void enqueue(queue_t *queue, node_t *new_node)
   }
   new_node->next = queue->front_pos;
 }
+
+
 
 /* node_data_t *peek(queue_t *queue) {
 
