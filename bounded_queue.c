@@ -53,28 +53,83 @@ int main(int argc, char *argv[]) {
   }
   
   print_queue(queue_construct);
-  printf("\nDequeue person from the queue - first person in queue will be removed.\n");
-  node_t *node = dequeue(queue_construct);
-  print_node(node);
-  print_queue(queue_construct);  
-
-  int num=0;
-  printf("\nAdd how many people to queue - ");
-  scanf("%d", &num);
-  for (int i=0; i < num; i++) {
-    if (add_to_queue(queue_construct)) {
-    printf("\nNew person added to queue successfully\n");
-    print_queue(queue_construct);
+  if (!isEmpty(queue_construct)) {
+    printf("\nDequeue person from the queue - first person in queue will be removed.\n");
+    node_t *node = dequeue(queue_construct);
+    print_node(node);
   } else {
-    printf("\nCould not add new person - check queue!!\n");
+    printf("\nQueue is empty - cannot dequeue\n");
   }
+  print_queue(queue_construct); 
+  
+  
+  int num = ask_to_queue();
+  int final = validate_new_length(queue_construct, num);
+  for (int i=0; i < final; i++) {
+    if (add_to_queue(queue_construct)) {
+      printf("\nNew person added to queue successfully\n");
+      print_queue(queue_construct);
+    } else {
+      printf("\nCould not add new person - check queue!!\n");
+      break;
+    }
   }
+
+  final_queue_state(queue_construct);
+  
   
   printf("\nFinal queue structure\n");
-  print_queue(queue_construct);                     
-  destroy_queue(queue_construct);
+  print_queue(queue_construct);      
+  
+  printf("\nRemoving all nodes in the queue\n");
+  int total = queue_construct->curr_length;
+  for (int i=0; i < total; i++) {
+    node_t *removed_node = dequeue(queue_construct);
+    print_node(removed_node);
+  }         
+  final_queue_state(queue_construct);      
+  
   
   free(queue_construct);
+}
+
+void final_queue_state(queue_t *queue) {
+  if (isEmpty(queue)) {
+    printf("\nQueue is empty - no nodes in the queue\n");  
+    return;
+  }
+  if (isFull(queue)) {
+    printf("\nQueue is full - no spare space in the queue. Currently all %d spaces occupied.\n", queue->curr_length);    
+  } 
+  printf("\nCurrently %d nodes in the queue.", queue->curr_length);
+  if (queue->curr_length!=1) {
+    printf("\n%s is at the front of the queue and %s is at the end of the queue\n", peek(queue)->node_desc, queue->end_pos->node_desc);
+  } else {
+    printf("\nOnly one node in the queue - %s is the single person in the queue\n", peek(queue)->node_desc);
+  }  
+}
+
+int ask_to_queue() {
+  int num=0;
+  do {
+    printf("\nHow many to add to queue - ");
+    if (scanf("%d", &num)!=1) {
+      while (getchar()!='\n');
+      fprintf(stderr, "\nInvalid input - please enter a single number.\n");
+    } else if (num==0) {
+      fprintf(stderr, "Please enter a number greater than zero (0)\n");
+    }
+  } while (num==0);
+  return num;
+}
+
+int validate_new_length(queue_t *queue, int num_to_add) {
+  if (queue->curr_length + num_to_add > queue->capacity) {
+    printf("\nUnable to add %d persons to queue - will exceed capacity\nCan only add %d persons to queue\n",
+                    num_to_add, queue->capacity-queue->curr_length);
+    return queue->capacity-queue->curr_length;
+  }
+  return num_to_add;
 }
 
 bool add_to_queue(queue_t *queue) {    

@@ -23,11 +23,16 @@ typedef struct queue {
 } queue_t;
 
 
-
+int ask_to_queue();
 bool enqueue(queue_t *queue, node_t *new_node);
 node_t *dequeue(queue_t *queue);
+node_t *peek(queue_t *queue);
+bool isFull(queue_t *queue);
+bool isEmpty(queue_t *queue);
 void print_queue(queue_t *queue);
 void print_node(node_t *node);
+int validate_new_length(queue_t *queue, int num_to_add);
+void final_queue_state(queue_t *queue);
 void destroy_queue(queue_t *queue);
 int64_t time_milli_stamp();
 int isNumber(char values[]);

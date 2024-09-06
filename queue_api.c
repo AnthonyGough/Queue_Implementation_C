@@ -59,7 +59,6 @@ queue_t *queue_init(int max_queue_length) {
 }
 
 
-
 /**
  * Precondition: queue_init() has been invoked to create an empty queue.
  * Postcondition: Queue is no longer present/available to the application and all allocated memory
@@ -82,7 +81,7 @@ void destroy_queue(queue_t *queue) {
 
 /**
  * Precondition: queue_init() has been invoked to create the queue ADT. The queue must contain
- * at least one element for the function to be called. queue->front_pos != NULL
+ * at least one element for the function to be called. isEmpty() is called prior to dequeue
  * Postcondition: The element/node pointed to by the head pointer (the front of the queue) is no longer
  * part of the queue. The head pointer will point to the next node in the queue which can be defined as
  * the node pointed to by dequeued_node->next. The node defined as dequeued_node->next is now the first 
@@ -93,7 +92,7 @@ void destroy_queue(queue_t *queue) {
  *          empty queue.
  */
 node_t *dequeue(queue_t *queue) {
-  if (queue->curr_length==0) {
+  if (isEmpty(queue)) {
     fprintf(stderr, "\nUnable to dequeue from an empty queue. The queue must contain at least one element to perform a dequeue\n");
     exit(EXIT_FAILURE);
   }
