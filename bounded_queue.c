@@ -43,7 +43,7 @@ int main(int argc, char *argv[]) {
   
   for (int i=0; i < init_queue_length; i++) {
     data = malloc(sizeof(node_t));
-    intialise_node(data, i);
+    create_node(data, i);
    
     nano_sleep_process();  
     
@@ -51,18 +51,47 @@ int main(int argc, char *argv[]) {
     enqueue(queue_construct, data);
     
   }
-
+  
   print_queue(queue_construct);
+  printf("\nDequeue person from the queue - first person in queue will be removed.\n");
   node_t *node = dequeue(queue_construct);
-  print_queue(queue_construct);
   print_node(node);
+  print_queue(queue_construct);  
+
+  int num=0;
+  printf("\nAdd how many people to queue - ");
+  scanf("%d", &num);
+  for (int i=0; i < num; i++) {
+    if (add_to_queue(queue_construct)) {
+    printf("\nNew person added to queue successfully\n");
+    print_queue(queue_construct);
+  } else {
+    printf("\nCould not add new person - check queue!!\n");
+  }
+  }
+  
+  printf("\nFinal queue structure\n");
+  print_queue(queue_construct);                     
   destroy_queue(queue_construct);
+  
   free(queue_construct);
+}
+
+bool add_to_queue(queue_t *queue) {    
+    node_t *data = malloc(sizeof(node_t));
+    data->arrival = queue->end_pos->arrival + (rand() % 10);
+    create_node(data,rand() % 100);
+    data->arrival = queue->end_pos->arrival + rand() % 30; 
+    if (enqueue(queue, data)) {
+      return true;
+    }
+ 
+    return false;
 }
 
 
 
-void intialise_node(node_t *data, int id) {
+void create_node(node_t *data, int id) {
   int rd_nm = rand() % (20-1+1) + 1;
   data->value = rd_nm;
   char str_num[4]= { 0 };

@@ -37,6 +37,7 @@ int isNumber(char values[]) {
  *                Elements present in the queue are printed to stdout starting from and including the front 
  *                of the queue to the last element in the queue. When the pointer to the next node in the queue
  *                is the same as the element at the front of the queue the circular buffer has been completely traversed.
+ *\param queue - Pointer to the queue object
  */
 void print_queue(queue_t *queue) {
     node_t *node = queue->front_pos;
@@ -59,12 +60,15 @@ void nano_sleep_process() {
     struct timespec ts;
     ts.tv_sec=0;
     ts.tv_nsec = ((rand() * rand()) % ((MAXSLEEP-MINSLEEP + 1) + MINSLEEP));
+        
     if (nanosleep(&ts, NULL) == FUNCTION_CALL_ERROR) {
         if (errno==EINTR) {
             fprintf(stderr, "\nSleep interrupted by a signal handler - the remaining sleep time is recoverable\n");
         } else if (errno==EINVAL) {
             fprintf(stderr, "\nInvalid value range for tv_nsec - This is not a recoverable error\n");
-            exit(EXIT_FAILURE);
+            ts.tv_sec*=-1;
+            ts.tv_nsec*=-1;
+           // exit(EXIT_FAILURE);
         }
     }  
 }

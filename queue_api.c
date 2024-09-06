@@ -105,43 +105,65 @@ node_t *dequeue(queue_t *queue) {
   } else {
     queue->front_pos = queue->front_pos->next;
     queue->end_pos->next = queue->front_pos;
-  }     
+  }      
   queue->curr_length--;
   return dq_node;
 }
 
+/**
+ * Check to see there is space in the queue for a new element. 
+ * Precondition: Queue has initialised
+ * Postcondition: return true if the current length of the queue is less than the queue capacity else false
+ * \param queue - pointer to the start of the queue (linked list)
+ */
 bool check_queue_capacity(queue_t *queue) {
-  return true;
+  return queue->curr_length < queue->capacity;
 }
 
-void enqueue(queue_t *queue, node_t *new_node)
+/**
+ * Function adds a new node to the queue and is added to the end of the queue
+ * as this is a FIFO data structure. 
+ * Precondition: Queue has been initialised and there is space in the queue for a new
+ * node to be added.
+ * Postcondition: If queue was not at capacity a new node is added to the queue. The capacity will
+ * be unchanged and the current length will be incremented by one. New node added will now be at end
+ * of the queue and will point to the first node in the queue as is a circular buffer
+ * \param returns true if new node added else returns false
+ */
+bool enqueue(queue_t *queue, node_t *new_node)
 {
+  if (!check_queue_capacity(queue)) {
+    return false;
+  }
   queue->curr_length++;  
   new_node->next = queue->front_pos;
-
  
   /* First into queue*/
   if (queue->curr_length==1) {
     queue->front_pos = new_node;
     queue->end_pos = new_node;
   } else {   
-    queue->end_pos->next = new_node; 
-    queue->end_pos = new_node;
     
+    queue->end_pos->next = new_node; 
+    queue->end_pos = new_node;    
   }
   new_node->next = queue->front_pos;
+  return true;
 }
 
 
 
-/* node_data_t *peek(queue_t *queue) {
-
+node_t *peek(queue_t *queue) {
+  if (queue==NULL) {
+    return NULL;
+  }
+  return queue->front_pos;
 }
 
 bool isFull(queue_t *queue) {
-
+  return queue->capacity==queue->curr_length;
 }
 
 bool isEmpty(queue_t *queue) {
-
-} */
+  return queue->curr_length==0;
+} 
